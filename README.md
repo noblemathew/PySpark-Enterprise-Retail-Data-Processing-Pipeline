@@ -1,16 +1,36 @@
-# PySpark-Enterprise-Retail-Data-Processing-Pipeline
-An automated end-to-end ETL pipeline built using Apache Spark and Python for processing daily retail transaction data. The pipeline performs incremental data ingestion, validation, cleaning, transformation, KPI generation, and optimized Parquet-based storage to simulate real-world enterprise data engineering workflows.
+# Enterprise Retail Data Processing Pipeline
 
-The system automatically checks for daily incoming retail sales files, processes the data only if a new file is available, removes invalid and duplicate records, generates business insights such as revenue trends and regional sales summaries, and stores processed outputs for analytics and reporting purposes.
+## Overview
+The Enterprise Retail Data Processing Pipeline is an automated end-to-end ETL solution developed using Apache Spark (PySpark) and Python to simulate real-world enterprise data engineering workflows. The pipeline processes daily retail transaction datasets, performs data validation and transformation, generates business KPIs, and stores optimized analytical outputs for reporting and downstream analytics.
 
-Features
-Automated daily incremental data processing
-PySpark-based ETL workflow
-Data cleaning and validation
-Duplicate and null record handling
-KPI generation and aggregations
-Spark SQL and window functions
-Optimized Parquet storage
-Logging and error handling
-Automated archival of processed files
-Production-style pipeline structure
+This project demonstrates scalable batch data processing, incremental file handling, automated workflow execution, and production-style ETL pipeline design using PySpark.
+
+---
+
+## Key Features
+
+- Automated incremental daily data processing
+- Dynamic file detection based on current date
+- PySpark-based ETL workflow
+- Data cleaning and validation
+- Null and duplicate record handling
+- Business KPI generation
+- Spark SQL transformations
+- Window function implementation
+- Optimized Parquet-based storage
+- Automated archival of processed datasets
+- Logging and error handling
+- Cloud-ready pipeline architecture
+
+---
+
+## Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| Python | Core development |
+| Apache Spark (PySpark) | Distributed data processing |
+| Spark SQL | Querying and aggregations |
+| Parquet | Optimized data storage |
+| GitHub Actions | Pipeline automation |
+| Power BI | Reporting and dashboards |
