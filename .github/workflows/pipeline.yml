@@ -1,0 +1,112 @@
+name: Retail ETL Pipeline
+
+on:
+
+  schedule:
+    - cron: '0 8 * * *'
+
+  workflow_dispatch:
+
+
+jobs:
+
+  run-pipeline:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # STEP 1 — CHECKOUT REPOSITORY
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+
+      # STEP 2 — SETUP PYTHON
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+
+        with:
+          python-version: '3.11'
+
+
+      # STEP 3 — INSTALL JAVA
+
+      - name: Install Java
+
+        uses: actions/setup-java@v4
+
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+
+      # STEP 4 — INSTALL PYSPARK
+
+      - name: Install Dependencies
+
+        run: |
+
+          pip install pyspark
+          pip install requests
+
+
+      # STEP 5 — CREATE RAW FOLDER
+
+      - name: Create Raw Folder
+
+        run: |
+
+          mkdir -p data/raw
+
+
+      # STEP 6 — DOWNLOAD TODAY CSV FROM NETLIFY
+
+      - name: Download CSV File
+
+        run: |
+
+          TODAY=$(date +'%Y_%m_%d')
+
+          FILE_NAME="sales_${TODAY}.csv"
+
+          FILE_URL="https://perdapp.netlify.app/${FILE_NAME}"
+
+          echo "Checking File: $FILE_URL"
+
+          HTTP_STATUS=$(curl -o data/raw/$FILE_NAME \
+          -s -w "%{http_code}" $FILE_URL)
+
+          echo "HTTP Status: $HTTP_STATUS"
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+
+            echo "No CSV file found for today"
+
+            exit 0
+
+          fi
+
+
+      - name: Run Pipeline
+
+        run: |
+
+          cd scripts
+
+          python pipeline.py
+
+      - name: Commit Processed Outputs
+
+        run: |
+
+          git config --global user.name "github-actions"
+
+          git config --global user.email "github-actions@github.com"
+
+          git add .
+
+          git commit -m "Automated ETL Output Update" || echo "No Changes"
+
+          git push
