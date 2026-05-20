@@ -1,4 +1,4 @@
-# PySpark Enterprise Retail Data Analytics Processing Pipeline
+# PySpark Enterprise Retail Data Analytics Processing Pipeline (PERDAPP)
 
 ## Website
 https://perdapp.netlify.app/
