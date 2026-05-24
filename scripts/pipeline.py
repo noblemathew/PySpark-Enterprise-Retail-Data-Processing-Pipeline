@@ -244,6 +244,15 @@ age_group_sales = {
     ).collect()
 
 }
+# State-wise revenue for dashboard bar chart and map filter
+state_sales = {
+    row["state"]: row["sum(revenue)"]
+    for row in df.groupBy(
+        "state"
+    ).sum(
+        "revenue"
+    ).collect()
+}
 
 from pyspark.sql.functions import col, sum as spark_sum
 
@@ -277,10 +286,9 @@ analytics_data = {
     "gender_sales": gender_sales,
     "country_sales": country_sales,
     "age_group_sales": age_group_sales,
-    "day_sales":day_sales_dict
+    "day_sales": day_sales_dict,
+    "state_sales": state_sales        
 }
-
-analytics_data
 
 print("Analytics Data Generated!")
 
@@ -303,26 +311,32 @@ df.coalesce(1).write.mode("overwrite").option(
 print("[INFO] Cleaned CSV dataset saved successfully")
 
 
-import json
+import json, os
 
-with open(
+# Save per-month analytics file  e.g. analytics_2026_05_24.json
+analytics_filename = f"analytics_{today}.json"
+analytics_path     = f"../visualize/{analytics_filename}"
 
-    "../visualize/analytics.json",
+with open(analytics_path, "w") as file:
+    json.dump(analytics_data, file, indent=4)
 
-    "w"
+print(f"[INFO] Analytics JSON saved: {analytics_filename}")
 
-) as file:
+# Update the master index so the dashboard knows what months exist
+index_path = "../visualize/available_datasets.json"
 
-    json.dump(
+existing = []
+if os.path.exists(index_path):
+    with open(index_path, "r") as f:
+        existing = json.load(f)
 
-        analytics_data,
+if analytics_filename not in existing:
+    existing.append(analytics_filename)
+    existing.sort()
 
-        file,
+with open(index_path, "w") as f:
+    json.dump(existing, f, indent=4)
 
-        indent=4
-
-    )
-
-print("[INFO] Analytics JSON generated successfully")
+print(f"[INFO] available_datasets.json updated: {existing}")
 
 
