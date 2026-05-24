@@ -283,13 +283,22 @@ print("Analytics Data Generated!")
 
 # Saving cleaned parquet dataset
 
-df.write.mode("overwrite").parquet(
+# Saving cleaned CSV dataset
 
-    f"../data/processed/perdapp_retail_analytics_{today}"
+df.coalesce(1).write.mode("overwrite").option(
+
+    "header",
+
+    True
+
+).csv(
+
+    f"../data/processed/cleaned_sales_{today}"
 
 )
 
-print("[INFO] Cleaned parquet dataset saved successfully")
+print("[INFO] Cleaned CSV dataset saved successfully")
+
 
 import json
 
