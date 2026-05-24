@@ -122,11 +122,14 @@ from pyspark.sql.functions import (
     year
 )
 # Keep original day and update only year and month
+current_year  = datetime.today().year
+current_month = datetime.today().month
+
 df = df.withColumn(
     "date",
     to_date(
         format_string(
-            "2026-05-%02d",
+            f"{current_year}-{current_month:02d}-%02d",
             dayofmonth(col("date"))
         )
     )
